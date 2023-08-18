@@ -29,8 +29,16 @@ const doc = new PDF( {
 
 // YOU CAN USE
 
+doc.textCenter(                 // TO ADD A LEFT ALIGNED TEXT
+    'LEFT ALIGNED TEXT',        // the text
+    200                         // the y position
+);
 doc.textCenter(                 // TO ADD A CENTERED TEXT
     'CENTERED TEXT',            // the text
+    200                         // the y position
+);
+doc.textRight(                  // TO ADD A RIGHT ALIGNED TEXT
+    'RIGHT ALIGNED TEXT',       // the text
     200                         // the y position
 );
 

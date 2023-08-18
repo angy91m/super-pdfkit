@@ -55,7 +55,13 @@ class SuperPDF extends PDF {
         return this.image( img, ( this.page.width - width ) / 2, y, { width } );
     }
     textCenter( txt, y = this.y ) {
-        return this.text( txt, this.page.margins.left, y, { align: 'center' } );
+        return this.text( txt, this.x, y, { align: 'center' } );
+    }
+    textLeft( txt, y = this.y ) {
+        return this.text( txt, this.x, y, { align: 'left' } );
+    }
+    textRight( txt, y = this.y ) {
+        return this.text( txt, this.x, y, { align: 'right' } );
     }
     end( endingCallback = undefined ) {
         let endingLength = 0;
