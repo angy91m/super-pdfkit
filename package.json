@@ -1,6 +1,6 @@
 {
   "name": "super-pdfkit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Enhanced pdfkit with some useful methods (thx to: pdfkit and pdfkit-table authors)",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/angy91m/super-pdfkit#readme",
   "dependencies": {
-    "pdfkit-table": "^0.1.99"
+    "pdfkit-table": "^0.1.99",
+    "textbox-for-pdfkit": "^0.2.1"
   }
 }

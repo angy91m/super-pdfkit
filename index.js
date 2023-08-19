@@ -1,5 +1,6 @@
 'use strict';
-const PDF = require( 'pdfkit-table' );
+const PDF = require( 'pdfkit-table' ),
+addTextbox = require( 'textbox-for-pdfkit' );
 class SuperPDF extends PDF {
     constructor( override = {} ) {
         const
@@ -50,18 +51,80 @@ class SuperPDF extends PDF {
         this.on( 'end', () => {
             this.finalBuffer = Buffer.concat( this.bufferData );
         } );
+        this.fillColor( '#000' );
     }
-    imageCenter( img, width = this.page.width - ( this.page.margins.left + this.page.margins.right ), y = this.y ) {
-        return this.image( img, ( this.page.width - width ) / 2, y, { width } );
+    textBox( textArr, x = this.x, y = this.y, options = {} ) {
+        let width = this.page.width - ( this.page.margins.left + this.page.margins.right );
+        if ( typeof options == 'number' ) {
+            width = options;
+            options = {};
+        } else if ( x.constructor === Object ) {
+            options = x;
+            x = this.x;
+        }
+        if ( typeof options.width == 'number' ) {
+            width = options.width;
+            delete options.width;
+        }
+        const originalStyle = {
+            font: this._font.name,
+            fontSize: this._fontSize,
+            color: this._fillColor[0]
+        }
+        options = {
+            ...originalStyle,
+            lineHeight: 1,
+            ...options
+        };
+        textArr = textArr.map( text => typeof text == 'string' ? { text } : text );
+        addTextbox( textArr, this, x, y, width, options );
+        return this.font( originalStyle.font ).fontSize( originalStyle.fontSize ).fillColor( originalStyle.color ).text( '', this.page.margins.left, this.y );
     }
-    textCenter( txt, y = this.y ) {
-        return this.text( txt, this.x, y, { align: 'center' } );
+    imageCenter( img, y = this.y, options = {} ) {
+        if ( typeof options == 'number' ) {
+            options = { width: options };
+        } else if ( y.constructor === Object ) {
+            options = y;
+            y = this.y;
+        }
+        options = {
+            width: this.page.width - ( this.page.margins.left + this.page.margins.right ),
+            ...options
+        };
+        return this.image( img, ( this.page.width - options.width ) / 2, y, options );
     }
-    textLeft( txt, y = this.y ) {
-        return this.text( txt, this.x, y, { align: 'left' } );
+    textCenter( txt, y = this.y, options = {} ) {
+        if ( y.constructor === Object ) {
+            options = y;
+            y = this.y;
+        }
+        options = {
+            align: 'center',
+            ...options
+        };
+        return this.text( txt, this.x, y, options );
     }
-    textRight( txt, y = this.y ) {
-        return this.text( txt, this.x, y, { align: 'right' } );
+    textLeft( txt, y = this.y, options = {} ) {
+        if ( y.constructor === Object ) {
+            options = y;
+            y = this.y;
+        }
+        options = {
+            align: 'left',
+            ...options
+        };
+        return this.text( txt, this.x, y, options );
+    }
+    textRight( txt, y = this.y, options = {} ) {
+        if ( y.constructor === Object ) {
+            options = y;
+            y = this.y;
+        }
+        options = {
+            align: 'right',
+            ...options
+        };
+        return this.text( txt, this.x, y, options );
     }
     end( endingCallback = undefined ) {
         let endingLength = 0;
