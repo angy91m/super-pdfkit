@@ -105,10 +105,10 @@ class SuperPDF extends PDF {
             y = this.y;
         }
         options = {
-            align: 'center',
             ...options
         };
-        return this.text( txt, this.x, y, options );
+        this.text( txt, ( this.marginedWidth() - this.widthOfString( txt, options ) ) / 2 + this.marginLeft(), y, options );
+        return this.text( '', this.marginLeft(), this.y );
     }
     textLeft( txt, y = this.y, options = {} ) {
         if ( y.constructor === Object ) {
@@ -127,14 +127,14 @@ class SuperPDF extends PDF {
             y = this.y;
         }
         options = {
-            align: 'right',
             ...options
         };
-        return this.text( txt, this.x, y, options );
+        return this.text( txt, this.page.width - ( this.widthOfString( txt, options ) + this.marginRight() ) - 1, y, options );
     }
-    marginTop( margin = undefined ) {
+    marginTop( margin = undefined, setY = true ) {
         if ( typeof margin == 'number' && margin >= 0 ) {
             this.page.margins.top = margin;
+            if ( setY ) this.text( '', this.x, this.page.margins.top );
             return this;
         }
         if ( typeof margin == 'undefined' ) return this.page.margins.top;
@@ -148,9 +148,10 @@ class SuperPDF extends PDF {
         if ( typeof margin == 'undefined' ) return this.page.margins.right;
         throw new Error( 'Invalid margin value passed' );
     }
-    marginLeft( margin = undefined ) {
+    marginLeft( margin = undefined, setX = true ) {
         if ( typeof margin == 'number' && margin >= 0 ) {
             this.page.margins.left = margin;
+            if ( setX ) this.text( '', this.page.margins.left, this.y );
             return this;
         }
         if ( typeof margin == 'undefined' ) return this.page.margins.left;

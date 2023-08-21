@@ -32,21 +32,22 @@ const doc = new PDF( {
 doc.textLeft(                           // TO ADD A LEFT ALIGNED TEXT
     'LEFT ALIGNED TEXT',                // the text
     200,                                // the y position OR options
-    { continued: true }                 // the options
-);
-doc.textRight( 'RIGHT ALIGNED TEXT' );
-doc.textCenter( 'CENTERED TEXT' );
-doc.textBox(
+    { width: 100 }                      // the options
+)
+.marginRight( 70 )
+.textRight( 'RIGHT ALIGNED TEXT' );
+.textCenter( 'CENTERED TEXT' )
+.marginRight( 50 )
+.textBox(
     [
         'My favourite color is ',
         { text: 'red', color: 'red' }
     ],
     { align: 'right' }
-);
-
-doc.imageCenter(                        // TO ADD A CENTERED IMAGE
+)
+.imageCenter(                        // TO ADD A CENTERED IMAGE
     'image.png',                        // the image
-    230,                                // the y position OR options
+    300,                                // the y position OR options
     100                                 // the image width OR options
 );
 
