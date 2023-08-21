@@ -127,6 +127,38 @@ class SuperPDF extends PDF {
         };
         return this.text( txt, this.x, y, options );
     }
+    marginTop( margin = undefined ) {
+        if ( Number.isInteger( margin ) ) {
+            this.page.margins.top = margin;
+            return this;
+        }
+        if ( typeof margin == 'undefined' ) return this.page.margins.top;
+        throw new Error( 'Invalid margin value passed' );
+    }
+    marginRight( margin = undefined ) {
+        if ( Number.isInteger( margin ) ) {
+            this.page.margins.right = margin;
+            return this;
+        }
+        if ( typeof margin == 'undefined' ) return this.page.margins.right;
+        throw new Error( 'Invalid margin value passed' );
+    }
+    marginLeft( margin = undefined ) {
+        if ( Number.isInteger( margin ) ) {
+            this.page.margins.left = margin;
+            return this;
+        }
+        if ( typeof margin == 'undefined' ) return this.page.margins.left;
+        throw new Error( 'Invalid margin value passed' );
+    }
+    marginBottom( margin = undefined ) {
+        if ( Number.isInteger( margin ) ) {
+            this.page.margins.bottom = margin;
+            return this;
+        }
+        if ( typeof margin == 'undefined' ) return this.page.margins.bottom;
+        throw new Error( 'Invalid margin value passed' );
+    }
     end( endingCallback = undefined ) {
         let endingLength = 0;
         // CALCULATE ENDING

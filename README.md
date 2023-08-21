@@ -29,10 +29,10 @@ const doc = new PDF( {
 
 // YOU CAN USE
 
-doc.textLeft(                   // TO ADD A LEFT ALIGNED TEXT
-    'LEFT ALIGNED TEXT',        // the text
-    200,                        // the y position OR options
-    { continued: true }         // the options
+doc.textLeft(                           // TO ADD A LEFT ALIGNED TEXT
+    'LEFT ALIGNED TEXT',                // the text
+    200,                                // the y position OR options
+    { continued: true }                 // the options
 );
 doc.textRight( 'RIGHT ALIGNED TEXT' );
 doc.textCenter( 'CENTERED TEXT' );
@@ -44,19 +44,23 @@ doc.textBox(
     { align: 'right' }
 );
 
-doc.imageCenter(                // TO ADD A CENTERED IMAGE
-    'image.png',                // the image
-    230,                        // the y position OR options
-    100                         // the image width OR options
+doc.imageCenter(                        // TO ADD A CENTERED IMAGE
+    'image.png',                        // the image
+    230,                                // the y position OR options
+    100                                 // the image width OR options
 );
+
+const marginLeft = doc.marginLeft();    // TO GET doc.page.margins.left VALUE
+
+doc.marginLeft( marginLeft );           // TO SET doc.page.margins.left VALUE (it returns doc)
 
 // TO FINISH YOU CAN USE...
 
-doc.end();                      // TO END THE DOCUMENT
+doc.end();                              // TO END THE DOCUMENT
 
 // OR
 
-doc.end( thisDoc => {           // TO ADD SOME NOT PAGE-DIVISIBLE CONTENT BEFORE ENDING THE DOCUMENT (useful for signatures)
+doc.end( thisDoc => {                   // TO ADD SOME NOT PAGE-DIVISIBLE CONTENT BEFORE ENDING THE DOCUMENT (useful for signatures)
 
     // A TOO LONG CONTENT FOR THE REST OF CURRENT PAGE
 
@@ -67,7 +71,7 @@ doc.end( thisDoc => {           // TO ADD SOME NOT PAGE-DIVISIBLE CONTENT BEFORE
 
 // OR
 
-doc.complete()                  // TO END THE DOCUMENT AND GET IT AS A BUFFER
+doc.complete()                          // TO END THE DOCUMENT AND GET IT AS A BUFFER
 .then( bufferData => console.log( bufferData ) );
 
 // YOU CAN PASS THE SAME FINAL FUNCTION TO end() OR complete() METHODS REGARDLESS
