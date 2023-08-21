@@ -168,7 +168,7 @@ class SuperPDF extends PDF {
         let endingLength = 0;
         // CALCULATE ENDING
         if ( endingCallback ) {
-            const doc = new PDF( {
+            const doc = new SuperPDF( {
                 size: this.page.size,
                 layout: this.page.layout,
                 bufferPages: true,
