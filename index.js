@@ -24,20 +24,20 @@ class SuperPDF extends PDF {
         super( options );
         if ( header ) {
             this.on( 'pageAdded', () => {
-                const top = this.page.margins.top;
-                this.page.margins.top = 0;
+                const top = this.marginTop();
+                this.marginTop( 0 );
                 header( this );
-                this.page.margins.top = top;
-                this.text( '', this.page.margins.left, top );
+                this.marginTop( top );
+                this.text( '', this.marginLeft(), top );
             } );
         }
         if ( footer ) {
             this.on( 'pageAdded', () => {
-                const bottom = this.page.margins.bottom;
-                this.page.margins.bottom = 0;
+                const bottom = this.marginBottom();
+                this.marginBottom( 0 );
                 footer( this );
-                this.page.margins.bottom = bottom;
-                this.text( '', this.page.margins.left, bottom );
+                this.marginBottom( bottom );
+                this.text( '', this.marginLeft(), bottom );
             } );
         }
         this.addPage();
@@ -53,8 +53,14 @@ class SuperPDF extends PDF {
         } );
         this.fillColor( '#000' );
     }
+    marginedWidth() {
+        return this.page.width - ( this.marginLeft() + this.marginRight() );
+    }
+    marginedHeight() {
+        return this.page.height - ( this.marginTop() + this.marginBottom() );
+    }
     textBox( textArr, x = this.x, y = this.y, options = {} ) {
-        let width = this.page.width - ( this.page.margins.left + this.page.margins.right );
+        let width = this.marginedWidth();
         if ( typeof options == 'number' ) {
             width = options;
             options = {};
@@ -78,7 +84,7 @@ class SuperPDF extends PDF {
         };
         textArr = textArr.map( text => typeof text == 'string' ? { text } : text );
         addTextbox( textArr, this, x, y, width, options );
-        return this.font( originalStyle.font ).fontSize( originalStyle.fontSize ).fillColor( originalStyle.color ).text( '', this.page.margins.left, this.y );
+        return this.font( originalStyle.font ).fontSize( originalStyle.fontSize ).fillColor( originalStyle.color ).text( '', this.marginLeft(), this.y );
     }
     imageCenter( img, y = this.y, options = {} ) {
         if ( typeof options == 'number' ) {
@@ -87,12 +93,11 @@ class SuperPDF extends PDF {
             options = y;
             y = this.y;
         }
-        const marginedPageWidth = this.page.width - ( this.page.margins.left + this.page.margins.right );
         options = {
-            width: marginedPageWidth,
+            width: this.marginedWidth(),
             ...options
         };
-        return this.image( img, ( marginedPageWidth - options.width ) / 2 + this.page.margins.left, y, options );
+        return this.image( img, ( this.marginedWidth() - options.width ) / 2 + this.marginLeft(), y, options );
     }
     textCenter( txt, y = this.y, options = {} ) {
         if ( y.constructor === Object ) {
@@ -128,7 +133,7 @@ class SuperPDF extends PDF {
         return this.text( txt, this.x, y, options );
     }
     marginTop( margin = undefined ) {
-        if ( Number.isInteger( margin ) ) {
+        if ( typeof margin == 'number' && margin >= 0 ) {
             this.page.margins.top = margin;
             return this;
         }
@@ -136,7 +141,7 @@ class SuperPDF extends PDF {
         throw new Error( 'Invalid margin value passed' );
     }
     marginRight( margin = undefined ) {
-        if ( Number.isInteger( margin ) ) {
+        if ( typeof margin == 'number' && margin >= 0 ) {
             this.page.margins.right = margin;
             return this;
         }
@@ -144,7 +149,7 @@ class SuperPDF extends PDF {
         throw new Error( 'Invalid margin value passed' );
     }
     marginLeft( margin = undefined ) {
-        if ( Number.isInteger( margin ) ) {
+        if ( typeof margin == 'number' && margin >= 0 ) {
             this.page.margins.left = margin;
             return this;
         }
@@ -152,7 +157,7 @@ class SuperPDF extends PDF {
         throw new Error( 'Invalid margin value passed' );
     }
     marginBottom( margin = undefined ) {
-        if ( Number.isInteger( margin ) ) {
+        if ( typeof margin == 'number' && margin >= 0 ) {
             this.page.margins.bottom = margin;
             return this;
         }
@@ -188,7 +193,7 @@ class SuperPDF extends PDF {
             const pageRange = this.bufferedPageRange();
             for ( let i = 0, start = pageRange.start; i < pageRange.count; i++ ) {
                 this.switchToPage( start );
-                const point = [0.5 * this.page.margins.left, this.page.height - 70];
+                const point = [0.5 * this.marginLeft(), this.page.height - 70];
                 this.rotate( -90, { origin: point } );
                 this.text( `${this.pageNumText}${i+1}/${pageRange.count}`, ...point );
                 this.rotate( 90, { origin: point } );

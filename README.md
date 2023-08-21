@@ -50,6 +50,8 @@ doc.imageCenter(                        // TO ADD A CENTERED IMAGE
     100                                 // the image width OR options
 );
 
+doc.marginedWidth();                    // TO GET doc.page.width - ( doc.page.margins.left + doc.page.margins.right )
+
 const marginLeft = doc.marginLeft();    // TO GET doc.page.margins.left VALUE
 
 doc.marginLeft( marginLeft );           // TO SET doc.page.margins.left VALUE (it returns doc)
