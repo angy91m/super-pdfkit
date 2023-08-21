@@ -6,12 +6,34 @@ class SuperPDF extends PDF {
         const
             pageNum = typeof override.pageNum == 'boolean' ? override.pageNum : false,
             pageNumText = override.pageNumText || '',
+            pageNumFontSize = override.pageNumFontSize,
             header = override.header,
-            footer = override.footer;
+            footer = override.footer,
+            autoFirstPage = typeof override.autoFirstPage != 'undefined' ? !!override.autoFirstPage : true,
+            font = override.font,
+            fontSize = override.fontSize,
+            fillColor = override.fillColor,
+            headerFont = override.headerFont,
+            headerFontSize = override.headerFontSize,
+            headerFillColor = override.headerFillColor,
+            footerFont = override.footerFont,
+            footerFontSize = override.footerFontSize,
+            footerFillColor = override.footerFillColor;
         delete override.pageNum;
         delete override.pageNumText;
+        delete override.pageNumFontSize;
         delete override.header;
         delete override.footer;
+        delete override.autoFirstPage;
+        delete override.font;
+        delete override.fontSize;
+        delete override.fillColor;
+        delete override.headerFont;
+        delete override.headerFontSize;
+        delete override.headerFillColor;
+        delete override.footerFont;
+        delete override.footerFontSize;
+        delete override.footerFillColor;
         const options = {
             size: 'A4',
             bufferPages: true,
@@ -22,27 +44,65 @@ class SuperPDF extends PDF {
             options.margin = 40;
         }
         super( options );
+        if ( font ) this.font( font );
+        if ( typeof fontSize == 'number' && fontSize > 0 ) this.fontSize( fontSize );
         if ( header ) {
             this.on( 'pageAdded', () => {
+                const originalStyle = {
+                    font: this._font.name,
+                    fontSize: this._fontSize,
+                    color: this._fillColor && this._fillColor[0] ? this._fillColor[0] : ( fillColor || '#000' )
+                }
+                if ( headerFont ) {
+                    this.font( headerFont );
+                }
+                if ( typeof headerFontSize == 'number' && headerFontSize > 0 ) {
+                    this.fontSize( headerFontSize );
+                }
+                if ( headerFillColor ) {
+                    this.fillColor( headerFillColor );
+                }
                 const top = this.marginTop();
                 this.marginTop( 0 );
                 header( this );
-                this.marginTop( top );
-                this.text( '', this.marginLeft(), top );
+                this.marginTop( top )
+                .font( originalStyle.font )
+                .fontSize( originalStyle.fontSize )
+                .fillColor( originalStyle.color )
+                .text( '', this.marginLeft(), top );
             } );
         }
         if ( footer ) {
             this.on( 'pageAdded', () => {
+                const originalStyle = {
+                    font: this._font.name,
+                    fontSize: this._fontSize,
+                    color: this._fillColor && this._fillColor[0] ? this._fillColor[0] : ( fillColor || '#000' )
+                }
+                if ( footerFont ) {
+                    this.font( footerFont );
+                }
+                if ( typeof footerFontSize == 'number' && footerFontSize > 0 ) {
+                    this.fontSize( footerFontSize );
+                }
+                if ( footerFillColor ) {
+                    this.fillColor( footerFillColor );
+                }
                 const bottom = this.marginBottom();
                 this.marginBottom( 0 );
                 footer( this );
-                this.marginBottom( bottom );
-                this.text( '', this.marginLeft(), bottom );
+                this.marginBottom( bottom )
+                .font( originalStyle.font )
+                .fontSize( originalStyle.fontSize )
+                .fillColor( originalStyle.color )
+                .text( '', this.marginLeft(), this.marginTop() );
             } );
         }
-        this.addPage();
+        if ( autoFirstPage ) this.addPage();
+        this.fillColor( fillColor || '#000' );
         this.pageNum = pageNum;
         this.pageNumText = pageNumText;
+        this.pageNumFontSize = pageNumFontSize;
         this.finalBuffer = null;
         this.bufferData = [];
         this.on( 'data', data => {
@@ -51,7 +111,6 @@ class SuperPDF extends PDF {
         this.on( 'end', () => {
             this.finalBuffer = Buffer.concat( this.bufferData );
         } );
-        this.fillColor( '#000' );
     }
     marginedWidth() {
         return this.page.width - ( this.marginLeft() + this.marginRight() );
@@ -105,6 +164,7 @@ class SuperPDF extends PDF {
             y = this.y;
         }
         options = {
+            width: this.marginedWidth(),
             ...options
         };
         this.text( txt, ( this.marginedWidth() - this.widthOfString( txt, options ) ) / 2 + this.marginLeft(), y, options );
@@ -127,6 +187,7 @@ class SuperPDF extends PDF {
             y = this.y;
         }
         options = {
+            width: this.marginedWidth(),
             ...options
         };
         return this.text( txt, this.page.width - ( this.widthOfString( txt, options ) + this.marginRight() ) - 1, y, options );
@@ -191,6 +252,7 @@ class SuperPDF extends PDF {
         }
         if ( this.pageNum ) {
             // ADDS PAGE NUMBER
+            if ( typeof this.pageNumFontSize == 'number' ) this.fontSize( this.pageNumFontSize );
             const pageRange = this.bufferedPageRange();
             for ( let i = 0, start = pageRange.start; i < pageRange.count; i++ ) {
                 this.switchToPage( start );
