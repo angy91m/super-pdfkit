@@ -87,11 +87,12 @@ class SuperPDF extends PDF {
             options = y;
             y = this.y;
         }
+        const marginedPageWidth = this.page.width - ( this.page.margins.left + this.page.margins.right );
         options = {
-            width: this.page.width - ( this.page.margins.left + this.page.margins.right ),
+            width: marginedPageWidth,
             ...options
         };
-        return this.image( img, ( this.page.width - options.width ) / 2, y, options );
+        return this.image( img, ( marginedPageWidth - options.width ) / 2 + this.page.margins.left, y, options );
     }
     textCenter( txt, y = this.y, options = {} ) {
         if ( y.constructor === Object ) {
