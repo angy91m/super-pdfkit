@@ -1,6 +1,6 @@
 {
   "name": "super-pdfkit",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Enhanced pdfkit with some useful methods (thx to: pdfkit and pdfkit-table authors)",
   "main": "index.js",
   "scripts": {
