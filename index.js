@@ -190,7 +190,8 @@ class SuperPDF extends PDF {
             width: this.marginedWidth(),
             ...options
         };
-        return this.text( txt, this.page.width - ( this.widthOfString( txt, options ) + this.marginRight() ) - 1, y, options );
+        this.text( txt, this.page.width - ( this.widthOfString( txt, options ) + this.marginRight() ) - 1, y, options );
+        return this.text( '', this.marginLeft(), this.y );
     }
     marginTop( margin = undefined, setY = true ) {
         if ( typeof margin == 'number' && margin >= 0 ) {
